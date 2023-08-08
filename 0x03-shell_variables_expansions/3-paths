@@ -1,2 +1,2 @@
 #!/bin/bash
-find "$PATH" -type d -print | wc -l
+echo $((find "$PATH" -type d -print | wc -l))
