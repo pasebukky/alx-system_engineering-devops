@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Bash script that displays contents of cd
+
+my_dir=$(ls)
+
+for i in $my_dir
+do
+	echo "$i" | cut -d '-' -f2
+done
