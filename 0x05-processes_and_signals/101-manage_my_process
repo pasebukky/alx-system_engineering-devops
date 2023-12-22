@@ -1,47 +1,41 @@
 #!/usr/bin/env bash
-# Check for the correct number of arguments
-if [ "$#" -ne 1 ]; then
+
+# Check for the correct amount of argument
+if [ -z "$1" ]; then
+  echo "Usage: $0 {start|stop|restart}"
+  exit 1
+elif [ -n "$2" ]; then
   echo "Usage: $0 {start|stop|restart}"
   exit 1
 fi
 
-PID_FILE="/var/run/my_process.pid"
-
-# Function to start the process
-start_process() {
+# Execute the command line arguments
+if [ "$1" == "start" ]; then
+  if [ -e "/var/run/my_process.pid" ]; then
+    echo "Error: manage_my_process is already running. Use '$0 restart' to restart."
+    exit 1
+  fi
   ./manage_my_process &
-  echo $! > "$PID_FILE"
+  echo $! > /var/run/my_process.pid
   echo "manage_my_process started"
-}
 
-# Function to stop the process
-stop_process() {
-  if [ -e "$PID_FILE" ]; then
-    pid=$(cat "$PID_FILE")
-    pkill -P "$pid" manage_my_process
-    rm "$PID_FILE"
+elif [ "$1" == "stop" ]; then
+  if [ -e "/var/run/my_process.pid" ]; then
+    pkill -F "/var/run/my_process.pid"
+    rm /var/run/my_process.pid
     echo "manage_my_process stopped"
   else
-    echo "manage_my_process is not running"
-  fi
-}
-
-# Execute the command line arguments
-case "$1" in
-  start)
-    start_process
-    ;;
-  stop)
-    stop_process
-    ;;
-  restart)
-    stop_process
-    start_process
-    echo "manage_my_process restarted"
-    ;;
-  *)
-    echo "Usage: $0 {start|stop|restart}"
+    echo "Error: manage_my_process is not running."
     exit 1
-    ;;
-esac
+  fi
+
+elif [ "$1" == "restart" ]; then
+  "$0" stop > /dev/null
+  "$0" start > /dev/null
+  echo "manage_my_process restarted"
+
+else
+  echo "Usage: $0 {start|stop|restart}"
+  exit 1
+fi
 
