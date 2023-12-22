@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Check for the correct number of arguments
 if [ -z "$1" ]; then
   echo "Usage: $0 {start|stop|restart}"
