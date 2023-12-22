@@ -4,15 +4,9 @@
 #     With a sleep 2 in between each iteration
 #     I am invincible!!! when receiving a SIGTERM signal
 
-trap_sigterm()
-{
-    echo "I am invicible!!!"
-}
+trap "echo I am invincible!!!" SIGTERM
 
-i=0
-while [ "$i" -eq 0 ]
-do
-    echo "To infinity and beyond"
-    sleep 2
-    trap trap_sigterm SIGTERM
-done
+while true; do
+  echo "To infinity and beyond"
+  sleep 2
+done;
