@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Check for the correct amount of argument
+# Check for the correct number of arguments
 if [ -z "$1" ]; then
   echo "Usage: $0 {start|stop|restart}"
   exit 1
@@ -16,7 +16,7 @@ if [ "$1" == "start" ]; then
     exit 1
   fi
   ./manage_my_process &
-  echo $! > /var/run/my_process.pid
+  echo $$ > /var/run/my_process.pid
   echo "manage_my_process started"
 
 elif [ "$1" == "stop" ]; then
