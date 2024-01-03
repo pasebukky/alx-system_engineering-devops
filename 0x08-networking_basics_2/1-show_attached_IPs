@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Displays all acive IPv4 addresses.
+
+ip -o addr show | awk '$3 == "inet" {print $4}' | cut -d '/' -f1
