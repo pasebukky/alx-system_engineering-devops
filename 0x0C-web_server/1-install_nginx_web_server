@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Bash script to install Nginx
+
+apt-get update
+apt-get install -y nginx
+chmod o+w /srv
+touch /srv/index.html
+echo "Hello World!" > /srv/index.html
+service nginx restart
