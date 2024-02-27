@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 # Script that fixes apache not running on docker
 
+echo "ServerName localhost" | tee -a /etc/apache2/apache2.conf
 service apache2 start
