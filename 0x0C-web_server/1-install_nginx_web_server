@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Bash script to install Nginx
+# Bash script to install and configure Nginx
 
 apt-get update
 apt-get install -y nginx
-touch /var/www/html/index.html
+mkdir -p /var/www/html
 echo "Hello World!" > /var/www/html/index.html
+chown -R www-data:www-data /var/www/html
 service nginx restart
