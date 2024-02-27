@@ -15,7 +15,27 @@ file { '/var/www/html/index.html':
 # Add location block for /redirect_me to Nginx configuration
 file { '/etc/nginx/sites-available/default':
   ensure  => 'file',
-  content => template('nginx/nginx.conf.erb'),
+  content => '
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+
+    # ... other configurations ...
+}
+',
   require => Package['nginx'],
   notify  => Service['nginx'],
 }
@@ -24,5 +44,4 @@ file { '/etc/nginx/sites-available/default':
 service { 'nginx':
   ensure  => running,
   enable  => true,
-  require => Package['nginx'],
 }
