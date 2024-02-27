@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Script that fixes apache not running on docker
+
+service apache2 start
