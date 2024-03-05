@@ -31,8 +31,13 @@ file { '/var/www/html/404.html':
   ensure  => 'present',
 }
 
+# Remove conflicting server block
 file { '/etc/nginx/sites-enabled/default':
   ensure  => 'present',
-  content => "server {\n\tserver_name _;\n\trewrite /redirect_me https://google.com permanent;\n}",
+  content => "server {
+    server_name _;
+    rewrite /redirect_me https://google.com permanent;
+    add_header X-Served-By $hostname;
+  }",
   notify  => Service['nginx'],
 }
