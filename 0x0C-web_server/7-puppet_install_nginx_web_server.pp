@@ -13,7 +13,7 @@ file { '/var/www/html/index.html':
 }
 
 # Add location block for /redirect_me to Nginx configuration
-file { '/etc/nginx/sites-available/default':
+file { '/etc/nginx/sites-enabled/default':
   ensure  => 'file',
   content => '
 server {
@@ -30,10 +30,9 @@ server {
     }
 
     location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+        return 301 https://www.google.com;
     }
 
-    # ... other configurations ...
 }
 ',
   require => Package['nginx'],
