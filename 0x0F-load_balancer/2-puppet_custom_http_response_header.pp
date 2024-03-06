@@ -1,42 +1,36 @@
 # Puppet script to create a custom HTTP header response
 
-# Ensure the system is updated
-exec { 'update':
-  command  => '/usr/bin/apt-get -y update',
+exec {'update':
+  provider => shell,
+  command  => 'sudo apt-get -y update',
+  before   => Exec['install Nginx'],
 }
 
-# Install Nginx
-package { 'nginx':
-  ensure  => 'installed',
-  require => Exec['update'],
+exec { 'install Nginx':
+  provider => shell,
+  command  => 'sudo apt-get -y install nginx',
+  before   => File['/etc/nginx/sites-available/custom_header'],
 }
 
-# Create the index.html page
-file { '/var/www/html/index.html':
-  content => 'Hello World!',
-  ensure  => 'present',
-}
-
-# Create the 404.html page
-file { '/var/www/html/404.html':
-  content => 'Ceci n\'est pas une page',
-  ensure  => 'present',
-}
-
-# Modify the Nginx configuration file
-file { '/etc/nginx/sites-enabled/default':
+file { '/etc/nginx/sites-available/custom_header':
+  ensure  => present,
   content => "server {
+    listen 80;
     server_name _;
     rewrite /redirect_me https://google.com permanent;
     add_header X-Served-By $hostname;
   }",
-  ensure  => 'present',
-  notify  => Service['nginx'],
+  before   => Exec['enable_custom_header'],
 }
 
-# Ensure the Nginx service is running
-service { 'nginx':
-  ensure     => 'running',
-  enable     => true,
-  subscribe  => File['/etc/nginx/sites-enabled/default'],
+exec { 'enable_custom_header':
+  provider => shell,
+  command  => 'sudo ln -sf /etc/nginx/sites-available/custom_header /etc/nginx/sites-enabled/',
+  before   => Exec['restart Nginx'],
+}
+
+exec { 'restart Nginx':
+  provider => shell,
+  command  => 'sudo service nginx restart',
+  require  => Exec['enable_custom_header'],
 }
