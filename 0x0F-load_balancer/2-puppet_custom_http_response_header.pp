@@ -18,7 +18,7 @@ file { '/etc/nginx/sites-available/custom_header':
     listen 80;
     server_name _;
     rewrite /redirect_me https://google.com permanent;
-    add_header X-Served-By $hostname;
+    add_header X-Served-By $fqdn;
   }",
   before   => Exec['enable_custom_header'],
 }
