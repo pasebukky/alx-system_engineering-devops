@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Configure domain zone so that the subdomain www points to your load-balancer IP
+
+domain_information() {
+    local domain="$1"
+    local subdomain="$2"
+    local line
+    line=$(dig +short "$subdomain"."$domain")
+    echo "$subdomain $line" | awk '{printf "The subdomain %s is a %s record and points to %s\n", $1, "A", $2}'
+}
+
+if [ "$#" -eq 1 ]; then
+    domain_information "$1" "www"
+    domain_information "$1" "lb-01"
+    domain_information "$1" "web-01"
+    domain_information "$1" "web-02"
+elif [ "$#" -eq 2 ]; then
+    domain_information "$1" "$2"
+fi
