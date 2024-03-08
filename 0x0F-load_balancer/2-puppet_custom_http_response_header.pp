@@ -1,36 +1,29 @@
 # Puppet script to create a custom HTTP header response
 
-exec {'update':
-  provider => shell,
-  command  => 'sudo apt-get -y update',
-  before   => Exec['install Nginx'],
+exec { 'update system':
+        command => '/usr/bin/apt-get update',
 }
 
-exec { 'install Nginx':
-  provider => shell,
-  command  => 'sudo apt-get -y install nginx',
-  before   => File['/etc/nginx/sites-available/custom_header'],
+package { 'nginx':
+	ensure => 'installed',
+	require => Exec['update system']
 }
 
-file { '/etc/nginx/sites-available/custom_header':
-  ensure  => present,
-  content => "server {
-    listen 80;
-    server_name _;
-    rewrite /redirect_me https://google.com permanent;
-    add_header X-Served-By $fqdn;
-  }",
-  before   => Exec['enable_custom_header'],
+file {'/var/www/html/index.html':
+	content => 'Hello World!'
 }
 
-exec { 'enable_custom_header':
-  provider => shell,
-  command  => 'sudo ln -sf /etc/nginx/sites-available/custom_header /etc/nginx/sites-enabled/',
-  before   => Exec['restart Nginx'],
+exec {'redirect_me':
+	command => 'sed -i "24i\	rewrite ^/redirect_me https://google.com/ permanent;" /etc/nginx/sites-available/default',
+	provider => 'shell'
 }
 
-exec { 'restart Nginx':
-  provider => shell,
-  command  => 'sudo service nginx restart',
-  require  => Exec['enable_custom_header'],
+exec {'HTTP header':
+	command => 'sed -i "25i\	add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
+	provider => 'shell'
+}
+
+service {'nginx':
+	ensure => running,
+	require => Package['nginx']
 }
