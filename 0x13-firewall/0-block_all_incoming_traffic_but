@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Update all installations on the server
+sudo apt-get -y update
+
+# Install ufw
+sudo apt-get -y install ufw
+
+# Configure ufw to block all incoming traffic on SSH, HTTPS SSL and HTTP respectively
+sudo ufw disable
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
