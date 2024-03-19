@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Backuo and compress database
+# Backup and compress database
 
 mysqldump --all-databases > backup.sql
 day=$(date +"%d")
