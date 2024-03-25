@@ -29,4 +29,4 @@ if __name__ == "__main__":
         user_info.get("name"), len(completed_tasks), len(todos_list)))
 
     for task_title in completed_tasks:
-        print("\t{}".format(task_title))
+        print("\t {}".format(task_title))
