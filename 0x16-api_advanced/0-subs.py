@@ -13,11 +13,16 @@ def number_of_subscribers(subreddit):
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
     headers = {'User-Agent': 'Linux Bukky'}
     response = requests.get(url, headers=headers, allow_redirects=False)
-    try:
-        if response.status_code == 200:
-            data = response.json()
-            return data['data']['subscribers']
-        else:
-            return 0
-    except Exception:
+    if response.status_code == 200:
+        data = response.json()
+        return data['data']['subscribers']
+    else:
         return 0
+
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) < 2:
+        print("Pass an argument to search.")
+    else:
+        print(number_of_subscribers(sys.argv[1]))
