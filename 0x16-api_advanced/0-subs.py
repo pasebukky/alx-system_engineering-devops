@@ -12,7 +12,8 @@ import sys
 def number_of_subscribers(subreddit):
     """Return the total number of subscribers for a particular subreddit."""
     url = "https://www.reddit.com/r/{subreddit}/about.json"
-    response = requests.get(url, allow_redirects=False)
+    headers = {'User-Agent': 'Linux: Bukky'}
+    response = requests.get(url, headers=headers, allow_redirects=False)
     if response.status_code == 200:
         data = response.json()
         return data['data']['subscribers']
