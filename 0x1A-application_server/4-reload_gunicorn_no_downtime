@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Find the process IDs of Gunicorn processes
+gunicorn_pids=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
+
+# Send a signal to the master process to gracefully reload
+for pid in $gunicorn_pids; do
+    echo "Reloading Gunicorn process with PID $pid..."
+    kill -HUP $pid
+done
+
+echo "Gunicorn reloaded gracefully."
+
+# Verify that Gunicorn processes have been restarted
+echo "Verifying Gunicorn processes..."
+ps aux | grep '[g]unicorn'
