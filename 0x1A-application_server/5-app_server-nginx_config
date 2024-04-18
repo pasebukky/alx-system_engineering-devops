@@ -26,9 +26,6 @@ location /hbnb_static { alias /data/web_static/current/;}
                 location /api/ {
                         proxy_pass http://0.0.0.0:5002;
                 }
-		location /static {
-			alias web_dynamic/static/;
-		}
                 if ($request_filename ~ redirect_me){
                         rewrite ^ https://th3-gr00t.tk/ permanent;
                 }
