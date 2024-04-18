@@ -1,4 +1,20 @@
 #!/usr/bin/env bash
 # Reload gunicorn
 
-pgrep gunicorn | xargs kill -HUP
+# Find the process IDs of Gunicorn processes using pgrep
+gunicorn_pids=$(pgrep gunicorn)
+
+# Send a signal to each worker process to gracefully reload
+for pid in $gunicorn_pids; do
+    echo "Reloading Gunicorn worker with PID $pid..."
+    kill -HUP "$pid"
+    # Add a small delay to allow each worker to finish processing requests
+    sleep 1
+done
+
+echo "Gunicorn workers reloaded gracefully."
+
+# Verify that Gunicorn processes have been restarted
+echo "Verifying Gunicorn processes..."
+pgrep gunicorn
+
