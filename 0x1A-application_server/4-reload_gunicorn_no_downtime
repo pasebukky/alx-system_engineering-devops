@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
 # Reload gunicorn
 
-gunicorn_pids=$(pgrep gunicorn)
-
-for pid in $gunicorn_pids; do
-    kill -HUP "$pid"
-    sleep 1
-done
-
-pgrep gunicorn && echo "OK"
+pgrep gunicorn | xargs kill -HUP
